@@ -83,11 +83,16 @@ class MainActivity : AppCompatActivity() {
 
                         if (outhCode == "loginDTO(result=쿼리 정상 작동") {
 
+                            // 로그인 성공시 아이디와 닉네임 값을 받아와서 쉐어드프리퍼런스에 넣고 사용
                             val prefs = applicationContext.getSharedPreferences("userdata", Context.MODE_PRIVATE)
                             val editor = prefs!!.edit()
                             editor.putString("id", id).apply()
                             var nickname = tmpStringArray[1]
                             editor.putString("nickname", nickname).apply()
+                            var profile = tmpStringArray[2]
+                            editor.putString("profile", profile).apply()
+                            var gold = tmpStringArray[3]
+                            editor.putString("gold", gold).apply()
 
 
                             // 로그인 성공시 액티비티 이동
@@ -97,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                         finish()
 
                         } else {
-                            // 로그인 실패시 예외처리
+                            // 로그인 실패시 예외처리(로그인 액티비티로 보냄)
                             val intent = Intent(applicationContext, LoginActivity::class.java)
                             startActivity(intent)
                         }

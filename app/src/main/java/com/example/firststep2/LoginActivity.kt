@@ -92,31 +92,50 @@ class LoginActivity : AppCompatActivity() {
 
                     if (outhCode == "loginDTO(result=쿼리 정상 작동") {
 
-                        val prefs = applicationContext.getSharedPreferences("userdata", Context.MODE_PRIVATE)
+                        // 로그인 성공시 쉐어드 프리퍼런스에 유저의 데이터를 입력함
+                        val prefs = applicationContext.getSharedPreferences(
+                            "userdata",
+                            Context.MODE_PRIVATE
+                        )
                         val editor = prefs!!.edit()
                         editor.putString("id", id).apply()
                         var nickname = tmpStringArray[1]
                         editor.putString("nickname", nickname).apply()
+                        var profile = tmpStringArray[2]
+                        editor.putString("profile", profile).apply()
+                        var gold = tmpStringArray[3]
+                        editor.putString("gold", gold).apply()
 
-                    if (cb_autologin.isChecked){
+                        if (cb_autologin.isChecked) {
+                            // 자동로그인 체크 하고 로그인 했을시 데이터베이스에 UUID 입력
+                            var db = Room.databaseBuilder(
+                                applicationContext, AppDatabase::class.java, "Database"
+                            ).build()
 
-                        var db = Room.databaseBuilder(
-                            applicationContext,AppDatabase::class.java,"Database"
-                        ).build()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                db.autologinDao().insert(RoomAutoLogin(1, id, UUID))
 
-                        CoroutineScope(Dispatchers.IO).launch {
-                            db.autologinDao().insert(RoomAutoLogin(1,id,UUID))
+                                // 쉐어드 프리퍼런스에 id값 입력
+                                val prefs = applicationContext.getSharedPreferences(
+                                    "autologin",
+                                    Context.MODE_PRIVATE
+                                )
+                                val editor = prefs!!.edit()
+                                editor.putString("id", id).apply()
 
 
+                            }
+                        } else{
+                            // 자동로그인 체크 안하고 로그인 할시 쉐어드 프리퍼런스에 id값 삭제
+                            val prefs = applicationContext.getSharedPreferences(
+                                "autologin",
+                                Context.MODE_PRIVATE
+                            )
+                            val editor = prefs!!.edit()
+                            editor.putString("id", "").apply()
 
                         }
 
-
-                        val prefs = applicationContext.getSharedPreferences("autologin", Context.MODE_PRIVATE)
-                        val editor = prefs!!.edit()
-                        editor.putString("id", id).apply()
-
-                    }
                         // 로그인 성공시 액티비티 이동
 
                         val intent = Intent(applicationContext, TodoActivity::class.java)

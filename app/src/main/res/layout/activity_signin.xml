@@ -59,6 +59,8 @@
         android:maxHeight="128dp"
         android:maxWidth="128dp"
         android:layout_marginTop="24dp"
+        android:onClick="photoAdd"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
@@ -71,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="사진 추가"
+        android:onClick="photoAdd"
         app:layout_constraintEnd_toEndOf="@+id/iv_profile"
         app:layout_constraintStart_toStartOf="@+id/iv_profile"
         app:layout_constraintTop_toBottomOf="@+id/iv_profile" />

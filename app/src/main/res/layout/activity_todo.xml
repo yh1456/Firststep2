@@ -11,8 +11,89 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="로그인 성공"
+        android:onClick="autologinDelete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/signin_profilephoto" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:background="#00000000"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/ib_dog"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cropToPadding="false"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/dog" />
+
+        <ImageButton
+            android:id="@+id/ib_calendar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cropToPadding="false"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/calendar" />
+
+        <ImageButton
+            android:id="@+id/ib_checklist"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cropToPadding="false"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/checklist" />
+
+        <ImageButton
+            android:id="@+id/ib_chat"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cropToPadding="false"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/chatting" />
+
+        <ImageButton
+            android:id="@+id/ib_setting"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:cropToPadding="false"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/setting" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
