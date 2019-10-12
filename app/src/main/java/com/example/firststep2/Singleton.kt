@@ -32,7 +32,7 @@ class Singleton private constructor(context: Context) {
             var intent:Intent? = null
             when(number){
                 0 -> intent = Intent(context, LoginActivity::class.java)
-                1 -> intent = Intent(context, LoginActivity::class.java)
+                1 -> intent = Intent(context, CalendarActivity::class.java)
                 2 -> intent = Intent(context, TodoActivity::class.java)
                 3 -> intent = Intent(context, LoginActivity::class.java)
                 4 -> intent = Intent(context, SettingActivity::class.java)
