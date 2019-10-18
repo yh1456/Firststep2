@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_signin.*
 import kotlinx.android.synthetic.main.activity_todo.*
 
 class TodoActivity : AppCompatActivity() {
+    // todo 현재 임시 액티비티임. todo 기능 추가시 삭제 후 다시 구현
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

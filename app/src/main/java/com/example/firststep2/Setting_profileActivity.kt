@@ -68,15 +68,13 @@ class Setting_profileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting_profile)
 
-        // 로그인한 유저 정보를 쉐어드 프리퍼런스에서 가져온다
         val prefs = applicationContext.getSharedPreferences("userdata", Context.MODE_PRIVATE)
         id = prefs.getString("id", "")
         var nickname = prefs.getString("nickname", "")
-        var profile :String = prefs.getString("profile", "")
+        var profile  = prefs.getString("profile", "")
         mMainPhotoPath = profile
         fileName = profile
 
-        // 가져온 유저 정보를 화면에 반영한다
         et_nickname.setText(nickname)
         if (profile == "0") {
             iv_photo.setImageResource(R.drawable.signin_profilephoto)
@@ -88,41 +86,31 @@ class Setting_profileActivity : AppCompatActivity() {
                 .into(iv_photo)
         }
 
-        // 바텀 네비게이션을 클릭하면 해당 액티비티로 이동한다
         ib_dog.setOnClickListener { Singleton.bottomMove(this, 0, this) }
         ib_calendar.setOnClickListener { Singleton.bottomMove(this, 1, this) }
         ib_checklist.setOnClickListener { Singleton.bottomMove(this, 2, this) }
         ib_chat.setOnClickListener { Singleton.bottomMove(this, 3, this) }
         ib_setting.setOnClickListener { Singleton.bottomMove(this, 4, this) }
 
-
-        // gson 빌드
         val gson = GsonBuilder()
             .setLenient()
             .create()
 
-        // Retrofit 빌드
         var retrofit = Retrofit.Builder()
             .baseUrl("http://15.164.201.56")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         server = retrofit.create(RetrofitService::class.java)
 
-        // 사진 입력받을 자리 라운딩 처리
         iv_photo.background = ShapeDrawable(OvalShape())
         iv_photo.clipToOutline = true
-
 
     }
 
 
     fun passwordClicked(view: View) {
-        /* 패스워드 변경 버튼을 클릭했을때 메소드
-           변경 확인시에 클릭했는지를 알기위해 전역변수에 값을 변경해준다
-           패스워드 변경 버튼을 없애고
-           패스워드를 변경할수있는 에딧텍스트를 드러낸다
-         */
-        PasswordIs = true
+        // 패스워드 변경 버튼을 클릭했을때 호출되는 메소드
+        PasswordIs = true // 클릭 여부를 알기위해 전역변수에 값을 변경해준다
         bt_passwordchange.visibility = View.GONE
         et_password.visibility = View.VISIBLE
 
@@ -246,7 +234,7 @@ class Setting_profileActivity : AppCompatActivity() {
 
                 })
 
-            } else { // 클릭하지 않았을 경우
+            } else { // 비밀번호 변경 버튼을 클릭하지 않았을 경우
                 // 서버에 데이터 전송.
                 server?.profilesettingRequest2(id.toString(), nickname, fileName)?.enqueue(object : Callback<DTO> {
                     override fun onFailure(call: Call<DTO>?, t: Throwable?) {
@@ -326,7 +314,7 @@ class Setting_profileActivity : AppCompatActivity() {
                 })
             }
         } else { // 데이터가 비정상일 경우
-            Toast.makeText(this, "닉네임 혹은 비밀번호 입력이 잘못되었습니다",Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "닉네임과 비밀번호를 확인하여 주세요",Toast.LENGTH_LONG).show()
         }
     }
 
@@ -334,8 +322,8 @@ class Setting_profileActivity : AppCompatActivity() {
     fun photoClicked(view: View) {
         /* 사진을 클릭했을때 메소드
            사진을 변경할수있는 다이얼로그를 보여준다
-
          */
+
         // 사진 권한 설정
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(
@@ -359,14 +347,14 @@ class Setting_profileActivity : AppCompatActivity() {
         }
         var items: Array<String>?
 
-        if (mMainPhotoPath == "0") { // 사진이 없을때 사진 추가 다이얼로그
+        if (mMainPhotoPath == "0") {
 
             val ListItems = ArrayList<String>()
             ListItems.add("카메라로 이동")
             ListItems.add("갤러리로 이동")
             items = ListItems.toTypedArray()
 
-        } else { // 사진이 있을때 사진 수정/삭제 다이얼로그
+        } else {
 
             val ListItems = ArrayList<String>()
             ListItems.add("카메라로 이동")
@@ -376,12 +364,13 @@ class Setting_profileActivity : AppCompatActivity() {
 
         }
 
+
         val builder = AlertDialog.Builder(this)
         builder.setTitle("사진 등록 선택")
         builder.setItems(items, DialogInterface.OnClickListener { dialog, pos ->
             when (pos) {
-                0 -> dispatchTakePictureIntent()//사진찍어서 저장하는 메소드로 이동
-                1 -> goToAlbum()//갤러리에서 사진을 가져오는 메소드로 이동
+                0 -> dispatchTakePictureIntent() //사진찍어서 저장하는 메소드로 이동
+                1 -> goToAlbum() //갤러리에서 사진을 가져오는 메소드로 이동
                 2 -> deletePhoto() // 사진 삭제 메소드
             }
 
@@ -409,7 +398,6 @@ class Setting_profileActivity : AppCompatActivity() {
             try {
                 photoFile = createImageFile()
             } catch (ex: IOException) {
-                // 예외처리
             }
 
             // 파일이 잘 만들어졌을때만 카메라 액티비티를 실행함.
@@ -438,7 +426,6 @@ class Setting_profileActivity : AppCompatActivity() {
             storageDir      /* directory */
         )
 
-        // 이후에 다른곳에서 사용할 절대경로를 String 전역변수로 저장함
         mMainPhotoPath = image.absolutePath
 
         return image
@@ -450,7 +437,6 @@ class Setting_profileActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = MediaStore.Images.Media.CONTENT_TYPE
         startActivityForResult(intent, TAKE_PICTURE)
-        // 갤러리로 감
     }
 
 
@@ -570,6 +556,7 @@ class Setting_profileActivity : AppCompatActivity() {
     }
 
     fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+        // 사진을 찍은 그대로 가져오면 돌아가있기때문에 해당 사진을 돌리는 메소드
         val matrix = Matrix()
         matrix.postRotate(angle)
 
@@ -578,7 +565,6 @@ class Setting_profileActivity : AppCompatActivity() {
             source, 0, 0, source.width, source.height,
             matrix, true
         )
-        //        사진을 찍은 그대로 가져오면 돌아가있기때문에 해당 사진을 돌리는 메소드를 미리 만들어둠
     }
 }
 

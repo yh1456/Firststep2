@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_calendarbottom.view.*
 
-class adapter_CalendarBottom(val mainActivity: CalendarActivity) :
+class adapter_CalendarBottom(val Activity: CalendarActivity) :
     RecyclerView.Adapter<ViewHolderHelper>() {
+    // 캘린더 액티비티의 하단에 입력되는 리사이클러뷰의 어댑터 클래스. 유저의 일정을 뿌려준다
+
     var itemlist = arrayListOf<item_CalendarBottom>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderHelper {

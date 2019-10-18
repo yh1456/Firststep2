@@ -33,30 +33,25 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // gson 빌드
         val gson = GsonBuilder()
             .setLenient()
             .create()
 
-        // Retrofit 빌드
         var retrofit = Retrofit.Builder()
             .baseUrl("http://15.164.201.56")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         server = retrofit.create(RetrofitService::class.java)
 
-
     }
 
-    fun signinClicked(view: View) { // 회원가입 클릭시 해당 액티비티로 이동
+    fun signinClicked(view: View) {
         val intent = Intent(this, SigninActivity::class.java)
         startActivityForResult(intent, 100)
-
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        // 회원가입에서 돌아왔을때 아이디 값 입력
         super.onActivityResult(requestCode, resultCode, data)
 
         if (data != null) {
@@ -66,12 +61,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun loginClicked(view: View) {
-        //로그인 클릭시 메소드
+        // 로그인 클릭시 메소드. 유저가 입력한 데이터를 검증하고 서버에 확인해서 로그인 처리를 한다
+
         var id = et_id.text.toString()
         var pw = et_pw.text.toString()
         val UUID = randomUUID().toString()
 
-        if (id == "" || pw == "") { // 아이디나 비밀번호가 비어있으면 알림
+        if (id == "" || pw == "") {
+
             Toast.makeText(applicationContext, "아이디 혹은 비밀번호를 입력해주세요", Toast.LENGTH_LONG).show()
         } else {
 
@@ -88,11 +85,10 @@ class LoginActivity : AppCompatActivity() {
                     Log.d("확인 Response", tmpString)
 
                     var tmpStringArray = tmpString.split(",")
-                    var outhCode = tmpStringArray[0] // 로그인 성공시 정보 받아옴
+                    var outhCode = tmpStringArray[0]
 
                     if (outhCode == "loginDTO(result=쿼리 정상 작동") {
 
-                        // 로그인 성공시 쉐어드 프리퍼런스에 유저의 데이터를 입력함
                         val prefs = applicationContext.getSharedPreferences(
                             "userdata",
                             Context.MODE_PRIVATE
@@ -114,8 +110,8 @@ class LoginActivity : AppCompatActivity() {
 
                             CoroutineScope(Dispatchers.IO).launch {
                                 db.autologinDao().insert(RoomAutoLogin(1, id, UUID))
+                                // 번호는 1로 고정. 하나의 아이디만 저장하기 위해서
 
-                                // 쉐어드 프리퍼런스에 id값 입력
                                 val prefs = applicationContext.getSharedPreferences(
                                     "autologin",
                                     Context.MODE_PRIVATE
@@ -136,15 +132,11 @@ class LoginActivity : AppCompatActivity() {
 
                         }
 
-                        // 로그인 성공시 액티비티 이동
-
                         val intent = Intent(applicationContext, TodoActivity::class.java)
                         startActivity(intent)
                         finish()
 
                     } else {
-                        // 로그인 실패시 예외처리
-
                         Toast.makeText(
                             applicationContext,
                             "아이디 혹은 비밀번호를 확인해주세요.",

@@ -30,6 +30,7 @@ import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
+    // fixme 스플래시액티비티로 전환할 예정
 
     var server: RetrofitService? = null
 
@@ -37,35 +38,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // gson 빌드
         val gson = GsonBuilder()
             .setLenient()
             .create()
 
-        // Retrofit 빌드
         var retrofit = Retrofit.Builder()
             .baseUrl("http://15.164.201.56")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         server = retrofit.create(RetrofitService::class.java)
 
-        // Room 빌드
         var db = Room.databaseBuilder(
-            applicationContext,AppDatabase::class.java,"Database"
+            applicationContext, AppDatabase::class.java, "Database"
         ).build()
 
-        // 쉐어드 프리퍼런스에서 id를 가져온다
+        // 자동로그인에 사용하기 위해서 쉐어드 프리퍼런스에서 id를 가져온다
         val prefs = applicationContext.getSharedPreferences("autologin", Context.MODE_PRIVATE)
         var id = prefs.getString("id", "")
 
-        if (id == ""){
-            // 쉐어드 프리퍼런스에 id가 없을시 로그인 페이지로 이동
+        if (id == "") {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         } else {
-            // id가 있으면 Room 에서 UUID를 꺼내온다
-//            textView2.text = id
+            // id가 있으면 Room 에서 UUID를 가져와서 서버의 id, UUID와 비교하여 자동 로그인 성공 여부를 판별한다.
+
             CoroutineScope(Dispatchers.IO).launch {
                 var UUID = db.autologinDao().getUUID(id).get(0).UUID
 
@@ -79,12 +76,14 @@ class MainActivity : AppCompatActivity() {
                         Log.d("확인 Response", tmpString)
 
                         var tmpStringArray = tmpString.split(",")
-                        var outhCode = tmpStringArray[0] // 로그인 성공시 정보 받아옴
+                        var outhCode = tmpStringArray[0]
 
                         if (outhCode == "loginDTO(result=쿼리 정상 작동") {
 
-                            // 로그인 성공시 아이디와 닉네임 값을 받아와서 쉐어드프리퍼런스에 넣고 사용
-                            val prefs = applicationContext.getSharedPreferences("userdata", Context.MODE_PRIVATE)
+                            val prefs = applicationContext.getSharedPreferences(
+                                "userdata",
+                                Context.MODE_PRIVATE
+                            )
                             val editor = prefs!!.edit()
                             editor.putString("id", id).apply()
                             var nickname = tmpStringArray[1]
@@ -95,14 +94,11 @@ class MainActivity : AppCompatActivity() {
                             editor.putString("gold", gold).apply()
 
 
-                            // 로그인 성공시 액티비티 이동
-
-                        val intent = Intent(applicationContext, TodoActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                            val intent = Intent(applicationContext, CalendarActivity::class.java)
+                            startActivity(intent)
+                            finish()
 
                         } else {
-                            // 로그인 실패시 예외처리(로그인 액티비티로 보냄)
                             val intent = Intent(applicationContext, LoginActivity::class.java)
                             startActivity(intent)
                         }
@@ -115,8 +111,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-
 
 
     }

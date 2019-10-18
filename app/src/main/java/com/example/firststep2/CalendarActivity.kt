@@ -36,6 +36,10 @@ class CalendarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
 
+        //todo 캘린더 수정 삭제 구현
+        //fixme 다음달 다녀왔을때 1일로 변하는 버그 수정
+        //
+
         // 로그인한 유저 정보를 쉐어드 프리퍼런스에서 가져온다
         val prefs = applicationContext.getSharedPreferences("userdata", Context.MODE_PRIVATE)
         userid = prefs.getString("id", "")
@@ -79,21 +83,21 @@ class CalendarActivity : AppCompatActivity() {
                 println("확인1 : scrollX = $scrollX, scrollY = $scrollY, oldx = $oldx, oldy = $oldy")
                 topDefault.visibility = View.VISIBLE
                 topViewBottom.visibility = View.GONE
-                // 스크롤뷰가 상단에 닿았을때 체크
+                // 스크롤뷰가 상단에 닿았을때 년/월을 불러와서 보여줌
             }
 
             if (!scrollview.canScrollVertically(1)) {
                 println("확인2 : scrollX = $scrollX, scrollY = $scrollY, oldx = $oldx, oldy = $oldy")
                 topDefault.visibility = View.GONE
                 topViewBottom.visibility = View.VISIBLE
-                // 스크롤뷰가 하단에 닿았을때 체크
+                // 스크롤뷰가 하단에 닿았을때 년/월/일을 보여줌
             }
 
 
         }
 
 
-        initView() // 리사이클러뷰를 가져오는 메소드
+        initView()
     }
 
     fun initView() {
@@ -178,8 +182,8 @@ class CalendarActivity : AppCompatActivity() {
 
     fun refreshBottomData(userid: String, calendar: GregorianCalendar) {
         // 날짜가 바뀌었을때 아래화면 데이터 최신화
-        /* 이건 나중에
-           5. 서버에 데이터 정확성을 체크하고 다른점이 있다면
+        /*  todo 캘린더 서버 연동 구현
+            5. 서버에 데이터 정확성을 체크하고 다른점이 있다면
             5-1. 데이터의 변경 일자를 확인해서 어느 데이터가 최신인지 확인한다
             5-2. 서버의 데이터가 최신이라면 룸에 데이터를 반영한다
             5-3. 배열을 비우고 데이터를 다시 입력한다

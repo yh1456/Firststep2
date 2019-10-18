@@ -13,13 +13,11 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
-        // 로그인한 유저 정보를 쉐어드 프리퍼런스에서 가져온다
         val prefs = applicationContext.getSharedPreferences("userdata", Context.MODE_PRIVATE)
         var nickname = prefs.getString("nickname", "")
         var profile = prefs.getString("profile", "")
         var gold = prefs.getString("gold", "")
 
-        // 바텀 네비게이션을 클릭하면 해당 액티비티로 이동한다
         ib_dog.setOnClickListener { Singleton.bottomMove(this, 0, this) }
         ib_calendar.setOnClickListener { Singleton.bottomMove(this, 1, this) }
         ib_checklist.setOnClickListener { Singleton.bottomMove(this, 2, this) }

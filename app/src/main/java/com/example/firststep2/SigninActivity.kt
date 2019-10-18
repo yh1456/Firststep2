@@ -41,7 +41,7 @@ import java.util.*
 
 
 class SigninActivity : AppCompatActivity() {
-    var server: RetrofitService? = null // 레트로핏 연결용 변수
+    var server: RetrofitService? = null
     var mMainPhotoPath: String = "0" // 사진 절대경로 저장용 변수
     var fileName: String = "0" // 서버 업로드용 이름 변수
     val REQUEST_TAKE_PHOTO = 1
@@ -54,12 +54,10 @@ class SigninActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signin)
 
-        // gson 빌드
         val gson = GsonBuilder()
             .setLenient()
             .create()
 
-        // Retrofit 빌드
         var retrofit = Retrofit.Builder()
             .baseUrl("http://15.164.201.56")
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -72,18 +70,17 @@ class SigninActivity : AppCompatActivity() {
     }
 
     fun finishClikded(view: View) {
-        // 뒤로가기 버튼 or 취소버튼 클릭시
-        // 액티비티를 종료한다
+        // 뒤로가기 버튼 or 취소버튼 클릭시 호출되는 메소드
         finish()
     }
 
 
     fun SigninClikded(view: View) {
-        // 회원가입 버튼 클릭시
+        // 회원가입 버튼 클릭시 호출되는 메소드
         var allIsOk = true // 입력값에 문제있을시 false로 바꿔서 분기 확인
-        var id: String = et_id.text.toString() // 에딧텍스트에 입력받은 아이디
-        var pw: String = et_pw.text.toString() // 에딧텍스트에 입력받은 비밀번호
-        var nickname: String = et_nickname.text.toString() // 에딧텍스트에 입력받은 닉네임
+        var id: String = et_id.text.toString()
+        var pw: String = et_pw.text.toString()
+        var nickname: String = et_nickname.text.toString()
 
         // 아이디 6글자 비밀번호 6글자 닉네임 2글자 미만일시 해당 경고 띄워줌
         if (id.length < 6) {
@@ -110,7 +107,7 @@ class SigninActivity : AppCompatActivity() {
         }
 
 
-        // 세가지 조건 모두 만족할때
+        // 세가지 조건 모두 문제가 없을때
         if (allIsOk) {
 
             if (mMainPhotoPath != "0") {
@@ -132,7 +129,6 @@ class SigninActivity : AppCompatActivity() {
                     Log.d("확인 Response", tmpString)
 
                     if (tmpString == "signinDTO(result=쿼리 정상 작동)") {
-                        // 데이터 전송에 이상없을시
 
                         // 사진 있을때 사진 업로드 추가
                         if (mMainPhotoPath != "0"){
@@ -159,8 +155,6 @@ class SigninActivity : AppCompatActivity() {
                             })
                         }
 
-
-                        // 로그인 액티비티로 이동. intent에 아이디 입력
                         val intent = Intent()
                         intent.putExtra("id", id)
                         setResult(100, intent)
@@ -202,7 +196,7 @@ class SigninActivity : AppCompatActivity() {
     }
 
     fun photoAdd(view: View) {
-        // 사진 권한 설정
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -225,14 +219,14 @@ class SigninActivity : AppCompatActivity() {
         }
         var items: Array<String>?
 
-        if (mMainPhotoPath == "0") { // 사진이 없을때 사진 추가 다이얼로그
+        if (mMainPhotoPath == "0") {
 
             val ListItems = ArrayList<String>()
             ListItems.add("카메라로 이동")
             ListItems.add("갤러리로 이동")
             items = ListItems.toTypedArray()
 
-        } else { // 사진이 있을때 사진 수정/삭제 다이얼로그
+        } else {
 
             val ListItems = ArrayList<String>()
             ListItems.add("카메라로 이동")
@@ -246,9 +240,9 @@ class SigninActivity : AppCompatActivity() {
         builder.setTitle("사진 등록 선택")
         builder.setItems(items, DialogInterface.OnClickListener { dialog, pos ->
             when (pos) {
-                0 -> dispatchTakePictureIntent()//사진찍어서 저장하는 메소드로 이동
-                1 -> goToAlbum()//갤러리에서 사진을 가져오는 메소드로 이동
-                2 -> deletePhoto() // 사진 삭제 메소드
+                0 -> dispatchTakePictureIntent()
+                1 -> goToAlbum()
+                2 -> deletePhoto()
             }
 
         })
@@ -333,7 +327,7 @@ class SigninActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 REQUEST_TAKE_PHOTO -> {
-                    // 사진찍기를 실행한 상태라면
+
                     if (resultCode == RESULT_OK) {
                         val file = File(mMainPhotoPath)
                         // createImageFile 메소드에서 만들어둔 경로값을 가져옴
@@ -344,8 +338,6 @@ class SigninActivity : AppCompatActivity() {
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
-
-                        // 그 경로값에 사진을 비트맵 형태로 넣음
 
                         if (bitmap != null) {
                             var ei: ExifInterface? = null
@@ -359,6 +351,7 @@ class SigninActivity : AppCompatActivity() {
                                 ExifInterface.TAG_ORIENTATION,
                                 ExifInterface.ORIENTATION_UNDEFINED
                             )
+
                             // 비트맵 파일이 있다면 사진을 돌려서 세트함
                             rotatedBitmap = null
                             when (orientation) {
@@ -444,7 +437,7 @@ class SigninActivity : AppCompatActivity() {
             source, 0, 0, source.width, source.height,
             matrix, true
         )
-        //        사진을 찍은 그대로 가져오면 돌아가있기때문에 해당 사진을 돌리는 메소드를 미리 만들어둠
+        // 사진을 찍은 그대로 가져오면 돌아가있기때문에 해당 사진을 돌리는 메소드를 미리 만들어둠
     }
 
 }
